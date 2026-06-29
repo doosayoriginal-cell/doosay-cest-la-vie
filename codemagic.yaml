@@ -58,9 +58,11 @@ workflows:
             -configuration Release \
             -archivePath /tmp/Runner.xcarchive \
             archive \
+            CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution" \
+            DEVELOPMENT_TEAM="4UZLD5743P" \
             PROVISIONING_PROFILE_SPECIFIER="Doosay_AppStore" \
-            DEVELOPMENT_TEAM="4UZLD5743P"
+            OTHER_CODE_SIGN_FLAGS="--keychain /Users/builder/Library/Keychains/login.keychain-db"
           xcodebuild -exportArchive \
             -archivePath /tmp/Runner.xcarchive \
             -exportPath build/ios/ipa \
