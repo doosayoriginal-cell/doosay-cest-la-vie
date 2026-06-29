@@ -51,7 +51,8 @@ workflows:
         script: cd ios && pod install
       - name: Build IPA
         script: |
-          flutter build ios --release --no-codesign
+          PROFILE_UUID=$(security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/2174b0cb-8e9c-487d-81ac-24b1ae02ba06.mobileprovision" 2>/dev/null | plutil -extract UUID raw - 2>/dev/null || echo "2174b0cb-8e9c-487d-81ac-24b1ae02ba06")
+          echo "Using profile UUID: $PROFILE_UUID"
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphoneos \
@@ -61,7 +62,7 @@ workflows:
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             DEVELOPMENT_TEAM="4UZLD5743P" \
-            PROVISIONING_PROFILE="2174b0cb-8e9c-487d-81ac-24b1ae02ba06" \
+            PROVISIONING_PROFILE="$PROFILE_UUID" \
             OTHER_CODE_SIGN_FLAGS="--keychain /Users/builder/Library/Keychains/login.keychain-db"
           xcodebuild -exportArchive \
             -archivePath /tmp/Runner.xcarchive \
