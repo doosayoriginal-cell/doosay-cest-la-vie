@@ -61,6 +61,7 @@ workflows:
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             DEVELOPMENT_TEAM="4UZLD5743P" \
+            PROVISIONING_PROFILE="2174b0cb-8e9c-487d-81ac-24b1ae02ba06" \
             OTHER_CODE_SIGN_FLAGS="--keychain /Users/builder/Library/Keychains/login.keychain-db"
           xcodebuild -exportArchive \
             -archivePath /tmp/Runner.xcarchive \
