@@ -49,25 +49,15 @@ workflows:
         script: flutter pub get
       - name: Pod install
         script: cd ios && pod install
+      - name: Configure Xcode signing
+        script: |
+          xcode-project use-profiles \
+            --project ios/Runner.xcodeproj \
+            --profile "$HOME/Library/MobileDevice/Provisioning Profiles/2174b0cb-8e9c-487d-81ac-24b1ae02ba06.mobileprovision"
       - name: Build IPA
         script: |
-          PROFILE_UUID=$(security cms -D -i "$HOME/Library/MobileDevice/Provisioning Profiles/2174b0cb-8e9c-487d-81ac-24b1ae02ba06.mobileprovision" 2>/dev/null | plutil -extract UUID raw - 2>/dev/null || echo "2174b0cb-8e9c-487d-81ac-24b1ae02ba06")
-          echo "Using profile UUID: $PROFILE_UUID"
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphoneos \
-            -configuration Release \
-            -archivePath /tmp/Runner.xcarchive \
-            archive \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            DEVELOPMENT_TEAM="4UZLD5743P" \
-            PROVISIONING_PROFILE="$PROFILE_UUID" \
-            OTHER_CODE_SIGN_FLAGS="--keychain /Users/builder/Library/Keychains/login.keychain-db"
-          xcodebuild -exportArchive \
-            -archivePath /tmp/Runner.xcarchive \
-            -exportPath build/ios/ipa \
-            -exportOptionsPlist /tmp/ExportOptions.plist
+          flutter build ipa --release \
+            --export-options-plist=/tmp/ExportOptions.plist
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
