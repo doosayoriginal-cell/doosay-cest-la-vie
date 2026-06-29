@@ -21,7 +21,7 @@ workflows:
         script: |
           PROFILES_HOME="$HOME/Library/MobileDevice/Provisioning Profiles"
           mkdir -p "$PROFILES_HOME"
-          echo $CM_PROVISIONING_PROFILE | base64 --decode > "$PROFILES_HOME/Doosay_AppStore.mobileprovision"
+          echo $CM_PROVISIONING_PROFILE | base64 --decode > "$PROFILES_HOME/2174b0cb-8e9c-487d-81ac-24b1ae02ba06.mobileprovision"
       - name: Create ExportOptions
         script: |
           cat > /tmp/ExportOptions.plist << 'PLIST'
