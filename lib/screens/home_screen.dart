@@ -6,6 +6,7 @@ import '../widgets/track_tile.dart';
 import '../widgets/mini_player.dart';
 import 'player_screen.dart';
 import 'bio_screen.dart';
+// ignore_for_file: unused_field
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = -1;
   bool _isPlaying = false;
   AppRepeatMode _repeat = AppRepeatMode.off;
-  final Map<int, Duration> _durations = {};
 
   @override
   void initState() {
@@ -38,18 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
-    _loadDurations();
-  }
-
-  Future<void> _loadDurations() async {
-    for (int i = 0; i < kTracks.length; i++) {
-      try {
-        final probe = AudioPlayer();
-        final dur = await probe.setAsset(kTracks[i].assetPath);
-        await probe.dispose();
-        if (dur != null && mounted) setState(() => _durations[i] = dur);
-      } catch (_) {}
-    }
   }
 
   @override
@@ -94,13 +82,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _formatDur(Duration? d) {
-    if (d == null) return '--:--';
-    final m = d.inMinutes.remainder(60);
-    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$m:$s';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   track: kTracks[index],
                   index: index + 1,
                   isPlaying: _currentIndex == index && _isPlaying,
-                  duration: _formatDur(_durations[index]),
+                  duration: '--:--',
                   onTap: () { _playIndex(index); _openPlayer(index); },
                 ),
                 childCount: kTracks.length,
