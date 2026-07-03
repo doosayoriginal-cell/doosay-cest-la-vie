@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ep_app"
+    namespace = "com.doosay.cestlavie"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -14,11 +14,17 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = "doosay"
+            keyPassword = "doosay2026"
+            storeFile = file("doosay-release.keystore")
+            storePassword = "doosay2026"
+        }
+    }
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.ep_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "com.doosay.cestlavie"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -27,9 +33,7 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
