@@ -7,21 +7,23 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  final session = await AudioSession.instance;
-  await session.configure(const AudioSessionConfiguration(
-    avAudioSessionCategory: AVAudioSessionCategory.playback,
-    avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth,
-    avAudioSessionMode: AVAudioSessionMode.defaultMode,
-    avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
-    avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-    androidAudioAttributes: AndroidAudioAttributes(
-      contentType: AndroidAudioContentType.music,
-      flags: AndroidAudioFlags.none,
-      usage: AndroidAudioUsage.media,
-    ),
-    androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
-    androidWillPauseWhenDucked: false,
-  ));
+  try {
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.allowBluetooth,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionRouteSharingPolicy: AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.music,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.media,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gain,
+      androidWillPauseWhenDucked: false,
+    ));
+  } catch (_) {}
 
   runApp(const EpApp());
 }
