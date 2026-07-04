@@ -1,4 +1,4 @@
-package com.example.ep_app
+package com.doosay.cestlavie
 
 import io.flutter.embedding.android.FlutterActivity
 
