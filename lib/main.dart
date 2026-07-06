@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:audio_service/audio_service.dart';
+import 'services/audio_handler.dart';
 import 'screens/home_screen.dart';
+
+late DoosayAudioHandler audioHandler;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +28,16 @@ Future<void> main() async {
       androidWillPauseWhenDucked: false,
     ));
   } catch (_) {}
+
+  audioHandler = await AudioService.init(
+    builder: () => DoosayAudioHandler(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'com.doosay.cestlavie.audio',
+      androidNotificationChannelName: 'DOOSAY - Lecture audio',
+      androidNotificationOngoing: true,
+      androidStopForegroundOnPause: true,
+    ),
+  );
 
   runApp(const EpApp());
 }

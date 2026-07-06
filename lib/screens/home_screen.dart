@@ -4,9 +4,9 @@ import '../data/tracks_data.dart';
 import '../models/repeat_mode.dart';
 import '../widgets/track_tile.dart';
 import '../widgets/mini_player.dart';
+import '../main.dart';
 import 'player_screen.dart';
 import 'bio_screen.dart';
-// ignore_for_file: unused_field
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AudioPlayer _player = AudioPlayer();
   int _currentIndex = -1;
   bool _isPlaying = false;
   AppRepeatMode _repeat = AppRepeatMode.off;
@@ -24,32 +23,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _player.playerStateStream.listen((state) {
+    audioHandler.player.playerStateStream.listen((state) {
       if (!mounted) return;
       setState(() => _isPlaying = state.playing);
-      if (state.processingState == ProcessingState.completed) {
-        if (_repeat == AppRepeatMode.one) {
-          _player.seek(Duration.zero);
-          _player.play();
-        } else if (_currentIndex < kTracks.length - 1) {
-          _playIndex(_currentIndex + 1);
-        } else if (_repeat == AppRepeatMode.all) {
-          _playIndex(0);
-        }
-      }
     });
-  }
-
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
+    audioHandler.onIndexChanged = (i) {
+      if (mounted) setState(() => _currentIndex = i);
+    };
   }
 
   Future<void> _playIndex(int index) async {
     try {
-      await _player.setAsset(kTracks[index].assetPath);
-      await _player.play();
+      await audioHandler.playTrack(index);
       if (mounted) setState(() => _currentIndex = index);
     } catch (_) {}
   }
@@ -61,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         case AppRepeatMode.all: _repeat = AppRepeatMode.one;
         case AppRepeatMode.one: _repeat = AppRepeatMode.off;
       }
+      audioHandler.repeatMode = _repeat;
     });
   }
 
@@ -70,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (_) => PlayerScreen(
           currentIndex: index,
-          player: _player,
+          player: audioHandler.player,
           allTracks: kTracks,
           repeat: _repeat,
           onTrackChange: (i) => _playIndex(i),
@@ -110,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: _currentIndex >= 0
           ? MiniPlayer(
               track: kTracks[_currentIndex],
-              player: _player,
+              player: audioHandler.player,
               isPlaying: _isPlaying,
               onTap: () => _openPlayer(_currentIndex),
             )
@@ -189,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     GestureDetector(
                       onTap: () {
                         if (_currentIndex < 0) { _playIndex(0); _openPlayer(0); }
-                        else { _isPlaying ? _player.pause() : _player.play(); }
+                        else { _isPlaying ? audioHandler.pause() : audioHandler.play(); }
                       },
                       child: Container(
                         width: 56, height: 56,
