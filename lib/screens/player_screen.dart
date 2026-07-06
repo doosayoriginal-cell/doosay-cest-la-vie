@@ -35,6 +35,7 @@ class PlayerScreen extends StatefulWidget {
 class _PlayerScreenState extends State<PlayerScreen> {
   late int _index;
   late AppRepeatMode _repeat;
+  final Set<int> _likedTracks = {};
 
   @override
   void initState() {
@@ -107,7 +108,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () => Share.share('Écoute "${_current.title}" de ${_current.artist} - EP C\'est la vie par Doosay !'),
+            onPressed: () => Share.share('🎵 Écoute "${_current.title}" de ${_current.artist} sur l\'EP C\'est la vie par DOOSAY !\n\n👉 Android : https://play.google.com/store/apps/details?id=com.doosay.cestlavie'),
           ),
         ],
       ),
@@ -144,7 +145,20 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     ],
                   ),
                 ),
-                Icon(Icons.favorite_border_rounded, color: Colors.grey[700], size: 26),
+                GestureDetector(
+                  onTap: () => setState(() {
+                    if (_likedTracks.contains(_index)) {
+                      _likedTracks.remove(_index);
+                    } else {
+                      _likedTracks.add(_index);
+                    }
+                  }),
+                  child: Icon(
+                    _likedTracks.contains(_index) ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                    color: _likedTracks.contains(_index) ? const Color(0xFFE8C547) : Colors.grey,
+                    size: 26,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -231,7 +245,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 IconButton(
                   icon: const Icon(Icons.ios_share_rounded, size: 24),
                   color: const Color(0xFF6B6B6B),
-                  onPressed: () => Share.share('Écoute "${_current.title}" de ${_current.artist} - EP C\'est la vie par Doosay !'),
+                  onPressed: () => Share.share('🎵 Écoute "${_current.title}" de ${_current.artist} sur l\'EP C\'est la vie par DOOSAY !\n\n👉 Android : https://play.google.com/store/apps/details?id=com.doosay.cestlavie'),
                 ),
               ],
             ),
