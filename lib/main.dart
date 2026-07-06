@@ -29,15 +29,19 @@ Future<void> main() async {
     ));
   } catch (_) {}
 
-  audioHandler = await AudioService.init(
-    builder: () => DoosayAudioHandler(),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.doosay.cestlavie.audio',
-      androidNotificationChannelName: 'DOOSAY - Lecture audio',
-      androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
-    ),
-  );
+  try {
+    audioHandler = await AudioService.init(
+      builder: () => DoosayAudioHandler(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.doosay.cestlavie.audio',
+        androidNotificationChannelName: 'DOOSAY - Lecture audio',
+        androidNotificationOngoing: true,
+        androidStopForegroundOnPause: true,
+      ),
+    );
+  } catch (_) {
+    audioHandler = DoosayAudioHandler();
+  }
 
   runApp(const EpApp());
 }
